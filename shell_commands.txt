@@ -1,0 +1,82 @@
+﻿from news.models import *
+
+#---Пункт 1
+user_1 = User.objects.create(username='Username_1')
+user_2 = User.objects.create(username='Username_2')
+
+#---Пункт 2
+author_1 = Author.objects.create(author_user=user_1)
+author_2 = Author.objects.create(author_user=user_2)
+
+#---Пункт 3
+category_1 = Category.objects.create(name='Категория 1')
+category_2 = Category.objects.create(name='Категория 2')
+category_3 = Category.objects.create(name='Категория 3')
+category_4 = Category.objects.create(name='Категория 4')
+
+#---Пункт 4
+news_1 = Post.objects.create(type='N', author=author_1, title='Bacon', text="""Bacon ipsum dolor amet short loin ground round pork picanha kevin. Turducken frankfurter beef ribs, bresaola pastrami venison ribeye andouille tenderloin. Jowl pork belly swine ground round andouille bacon shankle cow prosciutto leberkas burgdoggen sausage chislic rump beef. Doner porchetta corned beef alcatra pig jerky.""")
+article_1 = Post.objects.create(type='A', author=author_1, title='Sirloin', text="""Sirloin jowl filet mignon, pastrami ball tip hamburger ribeye venison rump andouille burgdoggen beef ribs boudin doner porchetta. Shankle landjaeger porchetta bacon pancetta, sausage flank venison bresaola buffalo. Prosciutto pig tri-tip, shank jerky sausage drumstick burgdoggen. Cow short ribs andouille, biltong kielbasa chicken rump landjaeger strip steak beef buffalo frankfurter chislic venison sirloin. Meatloaf turkey chislic fatback shankle boudin. Ground round chicken beef ribs venison, meatloaf pork chop porchetta sausage andouille. Tenderloin buffalo pastrami beef shoulder pork belly alcatra, meatloaf hamburger.""")
+article_2 = Post.objects.create(type='A', author=author_2, title='Ham hock', text="""Ham hock beef alcatra porchetta chuck shankle chicken kevin drumstick pork belly short ribs tri-tip. Pork spare ribs porchetta beef ribs shank meatball shoulder. Leberkas ham hock jerky, filet mignon sirloin chuck beef ribs shoulder sausage prosciutto picanha short loin. Filet mignon flank tri-tip bacon chuck frankfurter. Shoulder chuck sausage pork loin pork chop brisket drumstick sirloin strip steak salami corned beef porchetta pancetta beef ribs chislic. Shoulder burgdoggen meatball corned beef kevin bresaola bacon ground round chicken pork belly tri-tip short ribs ham hock cupim.""")
+
+#---Пункт 5
+news_1.category.add(category_1)
+news_1.category.add(category_3)
+article_1.category.add(category_2)
+article_2.category.add(category_4)
+
+#---Пункт 6
+comment_1 = Comment.objects.create(post=news_1, user=user_1, text='Delicious!')
+comment_2 = Comment.objects.create(post=news_1, user=user_2, text='Want it!')
+comment_3 = Comment.objects.create(post=article_1, user=user_2, text='XD')
+comment_4 = Comment.objects.create(post=article_2, user=user_1, text='Disgusting....')
+
+#---Пункт 7
+comment_1.like()
+comment_1.like()
+comment_1.like()
+comment_2.like()
+comment_2.dislike()
+
+comment_2.like()
+comment_2.like()
+
+comment_3.like()
+comment_3.dislike()
+comment_3.dislike()
+
+news_1.like()
+news_1.like()
+news_1.like()
+news_1.dislike()
+
+article_1.like()
+
+article_2.dislike()
+article_2.dislike()
+article_2.dislike()
+
+#---Пункт 8
+author_1.update_rating()
+author_2.update_rating()
+
+#---Пункт 9
+best_author = Author.objects.order_by('-author_rating')[0]
+best_author.author_user.username
+best_author.author_rating
+
+#---Пункт 9 (QuerySet)
+Author.objects.order_by('-author_rating').values('author_user__username', 'author_rating')[0]
+
+#---Пункт 10
+best_post = Post.objects.order_by('-rating')[0]
+best_post.datetime
+best_post.author.author_user.username
+best_post.rating
+best_post.title
+best_post.preview()
+
+#---Пункт 11 (QuerySet)
+Comment.objects.filter(post=best_post).values('datetime', 'user__username', 'rating', 'text')
+
+
